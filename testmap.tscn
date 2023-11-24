@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://dncbfkx3vm1xp"]
+
+[ext_resource type="Texture2D" uid="uid://4oelxujwxenk" path="res://assets/cave.png" id="1_g5521"]
+
+[node name="Map" type="Node2D"]
+
+[node name="MapArea2D" type="Area2D" parent="."]
+
+[node name="SpriteMap2D" type="Sprite2D" parent="MapArea2D"]
+position = Vector2(578, 324)
+scale = Vector2(0.899445, 0.899445)
+texture = ExtResource("1_g5521")
+
+[node name="MapCollisionPolygon2D" type="CollisionPolygon2D" parent="MapArea2D"]
+polygon = PackedVector2Array(-1, 5, 0, 466, 176, 465, 174, 404, 207, 379, 235, 379, 260, 402, 261, 463, 293, 463, 300, 479, 264, 521, 249, 582, 242, 644, 242, 676, 443, 674, 443, 646, 435, 601, 444, 558, 768, 559, 778, 593, 772, 646, 770, 673, 979, 671, 982, 645, 958, 573, 956, 535, 929, 552, 914, 639, 904, 524, 952, 482, 948, 439, 914, 368, 906, 353, 923, 346, 1150, 346, 1153, 337, 1153, -2)
