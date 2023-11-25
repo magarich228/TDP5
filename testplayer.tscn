@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4qktsvbffntp"]
+
+[ext_resource type="Script" path="res://CharacterBody2D.cs" id="1_jyn7y"]
+[ext_resource type="Texture2D" uid="uid://cconoy7861rxo" path="res://assets/Human_11 (1).png" id="2_lvq03"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lrcs0"]
+radius = 15.0
+height = 148.0
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_jyn7y")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(5, 3)
+scale = Vector2(0.733333, 0.733333)
+texture = ExtResource("2_lvq03")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(6, -9)
+shape = SubResource("CapsuleShape2D_lrcs0")
