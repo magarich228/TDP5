@@ -4,7 +4,7 @@ using System;
 public partial class CharacterBody2D : Godot.CharacterBody2D
 {
 	public const float Speed = 300.0f;
-	public const float JumpVelocity = -400.0f;
+	public const float JumpVelocity = -500.0f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
@@ -18,7 +18,7 @@ public partial class CharacterBody2D : Godot.CharacterBody2D
 			velocity.Y += gravity * (float)delta;
 
 		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
+		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
 			velocity.Y = JumpVelocity;
 
 		// Get the input direction and handle the movement/deceleration.
