@@ -33,6 +33,19 @@ public partial class CharacterBody2D : Godot.CharacterBody2D
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 		}
 
+		var mousePos = GetLocalMousePosition();
+		
+		if (mousePos.X < 0)
+		{
+			var scale = Transform.Scale;
+			
+			Scale = new Vector2()
+			{
+				Y = scale.Y,
+				X = -scale.X	
+			};
+		}
+		
 		Velocity = velocity;
 		MoveAndSlide();
 	}

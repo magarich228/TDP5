@@ -8,7 +8,6 @@ position = Vector2(568, 335)
 rotation = 3.14522
 
 [node name="Map" parent="." instance=ExtResource("1_mdbgx")]
-position = Vector2(566.208, 331.948)
 rotation = -3.14362
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_u8tp5")]
