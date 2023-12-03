@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dtbdvkbvex0j3"]
 
 [ext_resource type="PackedScene" uid="uid://dncbfkx3vm1xp" path="res://maps/testmap.tscn" id="1_mdbgx"]
-[ext_resource type="PackedScene" uid="uid://byx0w341133n1" path="res://player/testplayer.tscn" id="2_u8tp5"]
+[ext_resource type="PackedScene" uid="uid://bcavm6ggf6ur3" path="res://player/stickplayer.tscn" id="2_t4ahk"]
 
 [node name="game" type="Node2D"]
 position = Vector2(568, 335)
@@ -10,6 +10,6 @@ rotation = 3.14522
 [node name="Map" parent="." instance=ExtResource("1_mdbgx")]
 rotation = -3.14362
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("2_u8tp5")]
-position = Vector2(442.986, -4.60727)
-rotation = -3.11136
+[node name="CharacterBody2D2" parent="." instance=ExtResource("2_t4ahk")]
+position = Vector2(447.051, 13.3785)
+rotation = 3.14159
