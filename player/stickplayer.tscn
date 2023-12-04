@@ -1,0 +1,160 @@
+[gd_scene load_steps=6 format=3 uid="uid://bcavm6ggf6ur3"]
+
+[ext_resource type="Script" path="res://player/stickplayer.cs" id="1_1cwyx"]
+[ext_resource type="Texture2D" uid="uid://ben7youj6cow" path="res://assets/sticks/torse.png" id="1_vt2dl"]
+[ext_resource type="Texture2D" uid="uid://bo4803fyf50oq" path="res://assets/sticks/head.png" id="2_idle4"]
+[ext_resource type="Texture2D" uid="uid://dxtl0w6tklq2t" path="res://assets/sticks/bone.png" id="3_l2j0n"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ix8b3"]
+radius = 15.0
+height = 148.0
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+scale = Vector2(0.3, 0.3)
+script = ExtResource("1_1cwyx")
+
+[node name="Skeleton2D" type="Skeleton2D" parent="."]
+
+[node name="torse" type="Bone2D" parent="Skeleton2D"]
+position = Vector2(2, 150)
+rest = Transform2D(1, 0, 0, 1, 2, 150)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse"]
+position = Vector2(0, -60)
+texture = ExtResource("1_vt2dl")
+
+[node name="head" type="Bone2D" parent="Skeleton2D/torse"]
+position = Vector2(0, -128)
+rotation = -1.60452
+rest = Transform2D(-0.0337172, -0.999431, 0.999431, -0.0337172, 0, -128)
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/head"]
+position = Vector2(27.9866, 0.865107)
+rotation = 0.0254206
+texture = ExtResource("2_idle4")
+
+[node name="rightlegup" type="Bone2D" parent="Skeleton2D/torse"]
+position = Vector2(5, 5)
+rest = Transform2D(1, 0, 0, 1, 5, 5)
+editor_settings/show_bone_gizmo = false
+
+[node name="rightleg" type="Bone2D" parent="Skeleton2D/torse/rightlegup"]
+position = Vector2(26, 77)
+rotation = 1.5692
+rest = Transform2D(0.00159629, 0.999999, -0.999999, 0.00159629, 26, 77)
+auto_calculate_length_and_angle = false
+length = 80.0
+bone_angle = -1.0
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/rightlegup/rightleg"]
+position = Vector2(40.9984, 1.06563)
+rotation = 1.54307
+scale = Vector2(1, 1.2)
+texture = ExtResource("3_l2j0n")
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/rightlegup"]
+position = Vector2(10, 34)
+rotation = -0.336203
+scale = Vector2(1, 1.2)
+texture = ExtResource("3_l2j0n")
+
+[node name="leftlegup" type="Bone2D" parent="Skeleton2D/torse"]
+position = Vector2(-5, 5)
+rotation = 0.232607
+rest = Transform2D(0.973069, 0.230515, -0.230515, 0.973069, -5, 5)
+editor_settings/show_bone_gizmo = false
+
+[node name="leftleg" type="Bone2D" parent="Skeleton2D/torse/leftlegup"]
+position = Vector2(26, 77)
+rotation = 1.5692
+rest = Transform2D(0.00159629, 0.999999, -0.999999, 0.00159629, 26, 77)
+auto_calculate_length_and_angle = false
+length = 80.0
+bone_angle = -1.0
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/leftlegup/leftleg"]
+position = Vector2(40.9984, 1.06563)
+rotation = 1.54307
+scale = Vector2(1, 1.2)
+texture = ExtResource("3_l2j0n")
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/leftlegup"]
+position = Vector2(10, 34)
+rotation = -0.336203
+scale = Vector2(1, 1.2)
+texture = ExtResource("3_l2j0n")
+
+[node name="rightarmup" type="Bone2D" parent="Skeleton2D/torse"]
+position = Vector2(1.33333, -110)
+rest = Transform2D(1, 0, 0, 1, 1.33333, -110)
+auto_calculate_length_and_angle = false
+length = 72.4983
+bone_angle = 0.0
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/rightarmup"]
+position = Vector2(26.6667, -7.62939e-06)
+rotation = -1.57893
+texture = ExtResource("3_l2j0n")
+
+[node name="rightarm" type="Bone2D" parent="Skeleton2D/torse/rightarmup"]
+position = Vector2(63.3333, 3.33333)
+rest = Transform2D(1, 0, 0, 1, 63.3333, 3.33333)
+auto_calculate_length_and_angle = false
+length = 60.0
+bone_angle = 0.0
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/rightarmup/rightarm"]
+position = Vector2(26.6667, -3.33333)
+rotation = -1.5796
+texture = ExtResource("3_l2j0n")
+
+[node name="leftarmup" type="Bone2D" parent="Skeleton2D/torse"]
+position = Vector2(-2, -113.333)
+rest = Transform2D(1, 0, 0, 1, -2, -113.333)
+auto_calculate_length_and_angle = false
+length = 68.7184
+bone_angle = 66.9046
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/leftarmup"]
+position = Vector2(30.0912, 2.37312)
+rotation = -1.58385
+texture = ExtResource("3_l2j0n")
+
+[node name="leftarm" type="Bone2D" parent="Skeleton2D/torse/leftarmup"]
+position = Vector2(60, 3.33334)
+rotation = -0.142793
+scale = Vector2(1, 1)
+rest = Transform2D(0.989822, -0.142308, 0.142308, 0.989822, 60, 3.33334)
+auto_calculate_length_and_angle = false
+length = 60.0
+bone_angle = 0.0
+editor_settings/show_bone_gizmo = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/torse/leftarmup/leftarm"]
+position = Vector2(26.3953, 3.79489)
+rotation = -1.44867
+texture = ExtResource("3_l2j0n")
+
+[node name="RTlau" type="RemoteTransform2D" parent="Skeleton2D/torse"]
+position = Vector2(1.33333, -110)
+remote_path = NodePath("../leftarmup")
+use_global_coordinates = false
+
+[node name="RTrau" type="RemoteTransform2D" parent="Skeleton2D/torse"]
+position = Vector2(1.33333, -110)
+remote_path = NodePath("../rightarmup")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(3.33333, 136.667)
+scale = Vector2(2.54, 2.4)
+shape = SubResource("CapsuleShape2D_ix8b3")
