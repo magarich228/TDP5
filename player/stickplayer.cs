@@ -11,26 +11,40 @@ public partial class stickplayer : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		AnimationPlayer animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
+										  throw new ApplicationException($"Не получен узел {nameof(AnimationPlayer)}");
 		Vector2 velocity = Velocity;
 
+		// Handle rest position.
+		if (IsOnFloor() && velocity.X.Equals(0))
+		{
+			animationPlayer.Stop();
+		}
+		
 		// Add the gravity.
 		if (!IsOnFloor())
 			velocity.Y += gravity * (float)delta;
 
 		// Handle Jump.
 		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
+		{
 			velocity.Y = JumpVelocity;
+			animationPlayer.Stop();
+		}
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
 		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+		
 		if (direction != Vector2.Zero)
 		{
 			velocity.X = direction.X * Speed;
+			animationPlayer.Play("run");
 		}
 		else
 		{
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+			animationPlayer.Play("run");
 		}
 
 		var localMousePosition = GetLocalMousePosition();
