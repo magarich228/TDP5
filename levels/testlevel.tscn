@@ -12,4 +12,4 @@ rotation = -3.14362
 
 [node name="CharacterBody2D2" parent="." instance=ExtResource("2_t4ahk")]
 position = Vector2(447.051, 13.3785)
-rotation = 3.14159
+rotation = 3.13685
