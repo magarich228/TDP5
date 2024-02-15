@@ -11,12 +11,17 @@ public partial class stickplayer : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		// TODO: отрефачить код.
+		// TODO: баг с анимацией руки при приседании.
+		// TODO: баг с коллайдером после движения сразу после приседания.
+		// TODO: передвижение в присяде.
+		// TODO: фикс странной механики замедленного движения при зажатых ui_up, ui_down.
 		AnimationPlayer animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
 										  throw new ApplicationException($"Не получен узел {nameof(AnimationPlayer)}");
 		Vector2 velocity = Velocity;
 
 		// Handle rest position.
-		if (IsOnFloor() && velocity.X.Equals(0))
+		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
 			animationPlayer.Stop();
 		}
@@ -39,12 +44,24 @@ public partial class stickplayer : CharacterBody2D
 		if (direction != Vector2.Zero)
 		{
 			velocity.X = direction.X * Speed;
-			animationPlayer.Play("run");
 		}
 		else
 		{
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+		}
+		
+		if (velocity.X > 0)
+		{
 			animationPlayer.Play("run");
+		}
+		else if (velocity.X < 0)
+		{
+			animationPlayer.Play("run");
+		}
+
+		if (Input.IsActionJustPressed("ui_down") && IsOnFloor())
+		{
+			animationPlayer.Play("sit_down");
 		}
 
 		var localMousePosition = GetLocalMousePosition();
