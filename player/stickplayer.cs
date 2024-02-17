@@ -13,7 +13,6 @@ public partial class stickplayer : CharacterBody2D
 	{
 		// TODO: отрефачить код.
 		// TODO: баг с анимацией руки при приседании.
-		// TODO: баг с коллайдером после движения сразу после приседания.
 		// TODO: передвижение в присяде.
 		// TODO: фикс странной механики замедленного движения при зажатых ui_up, ui_down.
 		AnimationPlayer animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
@@ -88,4 +87,11 @@ public partial class stickplayer : CharacterBody2D
 	}
 
 	private int count;
+}
+
+public enum PlayerPosition : int
+{
+	Stand = 0,
+	Sit = 1,
+	Lie = 2
 }
