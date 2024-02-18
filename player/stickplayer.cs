@@ -84,10 +84,3 @@ public partial class stickplayer : CharacterBody2D
 
 	private int count;
 }
-
-public enum PlayerPosition : int
-{
-	Stand = 0,
-	Sit = 1,
-	Lie = 2
-}
