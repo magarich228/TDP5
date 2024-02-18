@@ -1,27 +1,56 @@
 using Godot;
 using System;
+using System.Text.RegularExpressions;
+using Godot.Collections;
+using Tdp5.player;
 
 public partial class stickplayer : CharacterBody2D
 {
-	private AnimationPlayer _animationPlayer;
-		
+	public PlayerState State { get; set; }	
 	public const float Speed = 300.0f;
 	public const float JumpVelocity = -500.0f;
 
-	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+	public float Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+	
+	private AnimationPlayer _animationPlayer;
+	private Dictionary<PlayerState, string> _stateAnimations;
 
 	public override void _Ready()
 	{
 		_animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
 						   throw new ApplicationException($"Не получен узел {nameof(AnimationPlayer)}");
+
+		_animationPlayer.Play("stand");
+
+		_stateAnimations = new Dictionary<PlayerState, string>();
+		
+		Console.WriteLine(Enum.GetValues<PlayerState>().Length);
+		
+		foreach (var state in Enum.GetValues<PlayerState>())
+		{
+			var stateName = Enum.GetName(state) ??
+								throw new ApplicationException("Не получено имя анимации состояния.");
+			
+			var animationName = _animationPlayer.GetAnimation(Regex.Replace(
+						stateName,
+						"[A-Z]",
+						"_$0")
+					.Substring(1)
+					.ToLower()).ResourceName;
+
+			if (!string.IsNullOrWhiteSpace(animationName))
+			{
+				_stateAnimations.Add(state, animationName);
+			}
+		}
 		
 		base._Ready();
 	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
+		// TODO: Замена ui событий на кастомные.
 		// TODO: отрефачить код.
-		// TODO: баг с анимацией руки при приседании.
 		// TODO: передвижение в присяде.
 		// TODO: фикс странной механики замедленного движения при зажатых ui_up, ui_down.
 		Vector2 velocity = Velocity;
@@ -32,7 +61,7 @@ public partial class stickplayer : CharacterBody2D
 		}
 		
 		if (!IsOnFloor())
-			velocity.Y += gravity * (float)delta;
+			velocity.Y += Gravity * (float)delta;
 
 		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
 		{
@@ -64,7 +93,7 @@ public partial class stickplayer : CharacterBody2D
 
 		if (Input.IsActionJustPressed("ui_down"))
 		{
-			_animationPlayer.Play("sit_down");
+			_animationPlayer.Play("sit");
 		}
 
 		var localMousePosition = GetLocalMousePosition();
@@ -90,5 +119,8 @@ public partial class stickplayer : CharacterBody2D
 		MoveAndSlide();
 	}
 
-	private int count;
+	private void Animate()
+	{
+		
+	}
 }

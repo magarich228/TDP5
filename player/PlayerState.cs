@@ -1,6 +1,6 @@
 namespace Tdp5.player;
 
-public enum PlayerPosition : int
+public enum PlayerState : int
 {
     Stand = 0,
     Run = 1,
