@@ -633,7 +633,7 @@ tracks/8/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_n3egn"]
-resource_name = "sit_down"
+resource_name = "sit"
 length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
