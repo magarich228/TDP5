@@ -6,14 +6,26 @@ using Tdp5.player;
 
 public partial class stickplayer : CharacterBody2D
 {
-	public PlayerState State { get; set; }	
 	public const float Speed = 300.0f;
 	public const float JumpVelocity = -500.0f;
 
+	public PlayerState State
+	{
+		get => _state;
+		set
+		{
+			if (value != _state)
+			{
+				_state = value;
+				Animate();
+			}
+		}
+	}
 	public float Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 	
 	private AnimationPlayer _animationPlayer;
 	private Dictionary<PlayerState, string> _stateAnimations;
+	private PlayerState _state;	
 
 	public override void _Ready()
 	{
@@ -23,8 +35,6 @@ public partial class stickplayer : CharacterBody2D
 		_animationPlayer.Play("stand");
 
 		_stateAnimations = new Dictionary<PlayerState, string>();
-		
-		Console.WriteLine(Enum.GetValues<PlayerState>().Length);
 		
 		foreach (var state in Enum.GetValues<PlayerState>())
 		{
@@ -49,15 +59,11 @@ public partial class stickplayer : CharacterBody2D
 	
 	public override void _PhysicsProcess(double delta)
 	{
-		// TODO: Замена ui событий на кастомные.
-		// TODO: отрефачить код.
-		// TODO: передвижение в присяде.
-		// TODO: фикс странной механики замедленного движения при зажатых ui_up, ui_down.
 		Vector2 velocity = Velocity;
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
-			_animationPlayer.Stop();
+			State = PlayerState.Stand;
 		}
 		
 		if (!IsOnFloor())
@@ -66,7 +72,6 @@ public partial class stickplayer : CharacterBody2D
 		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
 		{
 			velocity.Y = JumpVelocity;
-			_animationPlayer.Stop();
 		}
 
 		// Get the input direction and handle the movement/deceleration.
@@ -82,18 +87,20 @@ public partial class stickplayer : CharacterBody2D
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 		}
 		
-		if (velocity.X > 0)
+		if (velocity.X != 0 && velocity.Y == 0)
 		{
-			_animationPlayer.Play("run");
+			State = PlayerState.Run;
 		}
-		else if (velocity.X < 0)
+		
+		if (velocity.Y != 0 && !Input.IsActionJustPressed("ui_down"))
 		{
-			_animationPlayer.Play("run");
+			Console.WriteLine($"{velocity.Y}");
+			State = PlayerState.Jump;
 		}
 
 		if (Input.IsActionJustPressed("ui_down"))
 		{
-			_animationPlayer.Play("sit");
+			State = PlayerState.Sit;
 		}
 
 		var localMousePosition = GetLocalMousePosition();
@@ -116,11 +123,15 @@ public partial class stickplayer : CharacterBody2D
 		rtRau.LookAt(globalMousePosition);
 		
 		Velocity = velocity;
+		
 		MoveAndSlide();
 	}
 
 	private void Animate()
 	{
-		
+		if (_animationPlayer.CurrentAnimation != _stateAnimations[State])
+		{
+			_animationPlayer.Play(_stateAnimations[State]);
+		}
 	}
 }
