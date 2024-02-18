@@ -58,7 +58,7 @@ public partial class stickplayer : CharacterBody2D
 			animationPlayer.Play("run");
 		}
 
-		if (Input.IsActionJustPressed("ui_down") && IsOnFloor())
+		if (Input.IsActionJustPressed("ui_down"))
 		{
 			animationPlayer.Play("sit_down");
 		}
