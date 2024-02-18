@@ -3,24 +3,32 @@ using System;
 
 public partial class stickplayer : CharacterBody2D
 {
+	private AnimationPlayer _animationPlayer;
+		
 	public const float Speed = 300.0f;
 	public const float JumpVelocity = -500.0f;
 
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 
+	public override void _Ready()
+	{
+		_animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
+						   throw new ApplicationException($"Не получен узел {nameof(AnimationPlayer)}");
+		
+		base._Ready();
+	}
+	
 	public override void _PhysicsProcess(double delta)
 	{
 		// TODO: отрефачить код.
 		// TODO: баг с анимацией руки при приседании.
 		// TODO: передвижение в присяде.
 		// TODO: фикс странной механики замедленного движения при зажатых ui_up, ui_down.
-		AnimationPlayer animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
-										  throw new ApplicationException($"Не получен узел {nameof(AnimationPlayer)}");
 		Vector2 velocity = Velocity;
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
-			animationPlayer.Stop();
+			_animationPlayer.Stop();
 		}
 		
 		if (!IsOnFloor())
@@ -29,7 +37,7 @@ public partial class stickplayer : CharacterBody2D
 		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
 		{
 			velocity.Y = JumpVelocity;
-			animationPlayer.Stop();
+			_animationPlayer.Stop();
 		}
 
 		// Get the input direction and handle the movement/deceleration.
@@ -47,16 +55,16 @@ public partial class stickplayer : CharacterBody2D
 		
 		if (velocity.X > 0)
 		{
-			animationPlayer.Play("run");
+			_animationPlayer.Play("run");
 		}
 		else if (velocity.X < 0)
 		{
-			animationPlayer.Play("run");
+			_animationPlayer.Play("run");
 		}
 
 		if (Input.IsActionJustPressed("ui_down"))
 		{
-			animationPlayer.Play("sit_down");
+			_animationPlayer.Play("sit_down");
 		}
 
 		var localMousePosition = GetLocalMousePosition();
