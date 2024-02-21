@@ -9,23 +9,11 @@ public partial class stickplayer : CharacterBody2D
 	public const float Speed = 300.0f;
 	public const float JumpVelocity = -500.0f;
 
-	public PlayerState State
-	{
-		get => _state;
-		set
-		{
-			if (value != _state)
-			{
-				_state = value;
-				Animate();
-			}
-		}
-	}
+	public PlayerState State { get; set; }
 	public float Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 	
 	private AnimationPlayer _animationPlayer;
 	private Dictionary<PlayerState, string> _stateAnimations;
-	private PlayerState _state;	
 
 	public override void _Ready()
 	{
@@ -59,6 +47,7 @@ public partial class stickplayer : CharacterBody2D
 	
 	public override void _PhysicsProcess(double delta)
 	{
+		var oldState = State;
 		Vector2 velocity = Velocity;
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
@@ -92,15 +81,20 @@ public partial class stickplayer : CharacterBody2D
 			State = PlayerState.Run;
 		}
 		
-		if (velocity.Y != 0 && !Input.IsActionJustPressed("ui_down"))
+		if (velocity.Y != 0 && !Input.IsActionPressed("ui_down"))
 		{
-			Console.WriteLine($"{velocity.Y}");
 			State = PlayerState.Jump;
 		}
 
-		if (Input.IsActionJustPressed("ui_down"))
+		if (Input.IsActionPressed("ui_down"))
 		{
 			State = PlayerState.Sit;
+		}
+
+		if (velocity.X != 0 && Input.IsActionPressed("ui_down") &&
+			(Input.IsActionPressed("ui_left") || Input.IsActionPressed("ui_right")))
+		{
+			State = PlayerState.SitWalk;
 		}
 
 		var localMousePosition = GetLocalMousePosition();
@@ -125,6 +119,9 @@ public partial class stickplayer : CharacterBody2D
 		Velocity = velocity;
 		
 		MoveAndSlide();
+		
+		if (State != oldState)
+			Animate();
 	}
 
 	private void Animate()

@@ -866,6 +866,7 @@ tracks/18/keys = {
 
 [sub_resource type="Animation" id="Animation_4uhs2"]
 resource_name = "sit_walk"
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
