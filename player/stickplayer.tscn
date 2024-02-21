@@ -215,6 +215,18 @@ tracks/16/keys = {
 "update": 0,
 "values": [0.0]
 }
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("CollisionShape2D2:scale")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2.54, 2.4)]
+}
 
 [sub_resource type="Animation" id="Animation_fcopi"]
 resource_name = "creep"
@@ -1494,3 +1506,4 @@ shape = SubResource("CapsuleShape2D_ix8b3")
 libraries = {
 "": SubResource("AnimationLibrary_houuf")
 }
+next/RESET = &"sit"

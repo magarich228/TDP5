@@ -52,8 +52,9 @@ public partial class stickplayer : CharacterBody2D
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
+			Console.WriteLine("stand");
 			State = PlayerState.Stand;
-		}
+		} else { Console.WriteLine($"not stand ({State})"); }
 		
 		if (!IsOnFloor())
 			velocity.Y += Gravity * (float)delta;
@@ -119,6 +120,9 @@ public partial class stickplayer : CharacterBody2D
 		Velocity = velocity;
 		
 		MoveAndSlide();
+		
+		if (State == PlayerState.Sit && oldState == PlayerState.SitWalk)
+			_animationPlayer.Play("sit", fromEnd: true);
 		
 		if (State != oldState)
 			Animate();
