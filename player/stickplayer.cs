@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Godot.Collections;
 using Tdp5.player;
@@ -14,6 +15,7 @@ public partial class stickplayer : CharacterBody2D
 	
 	private AnimationPlayer _animationPlayer;
 	private Dictionary<PlayerState, string> _stateAnimations;
+	private Stopwatch _watch = new Stopwatch();
 
 	public override void _Ready()
 	{
