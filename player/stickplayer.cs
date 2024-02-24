@@ -15,10 +15,11 @@ public partial class stickplayer : CharacterBody2D
 	
 	private AnimationPlayer _animationPlayer;
 	private Dictionary<PlayerState, string> _stateAnimations;
-	private Stopwatch _watch = new Stopwatch();
+	private Stopwatch _watch;
 
 	public override void _Ready()
 	{
+		_watch = new Stopwatch();
 		_animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
 						   throw new ApplicationException($"Не получен узел {nameof(AnimationPlayer)}");
 
@@ -54,9 +55,8 @@ public partial class stickplayer : CharacterBody2D
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
-			Console.WriteLine("stand");
-			State = PlayerState.Stand;
-		} else { Console.WriteLine($"not stand ({State})"); }
+			State = State != PlayerState.Lie ? PlayerState.Stand : PlayerState.Lie;
+		}
 		
 		if (!IsOnFloor())
 			velocity.Y += Gravity * (float)delta;
@@ -91,7 +91,14 @@ public partial class stickplayer : CharacterBody2D
 
 		if (Input.IsActionPressed("ui_down"))
 		{
-			State = PlayerState.Sit;
+			if (_watch.IsRunning && _watch.ElapsedMilliseconds > 500)
+			{
+				_watch.Restart();
+			}
+			
+			State = _watch.ElapsedMilliseconds > 500 ? PlayerState.Sit : PlayerState.Lie;
+			
+			_watch.Start();
 		}
 
 		if (velocity.X != 0 && Input.IsActionPressed("ui_down") &&
