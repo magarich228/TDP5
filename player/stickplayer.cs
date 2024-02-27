@@ -58,7 +58,7 @@ public partial class stickplayer : CharacterBody2D
 
 		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
 		{
-			if (State == PlayerState.Lie)
+			if (State == PlayerState.Lie || State == PlayerState.Creep)
 			{
 				State = PlayerState.Stand;
 			}
