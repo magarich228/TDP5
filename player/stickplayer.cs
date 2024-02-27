@@ -67,16 +67,18 @@ public partial class stickplayer : CharacterBody2D
 				velocity.Y = JumpVelocity;
 			}
 		}
-		
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		
-		if (direction != Vector2.Zero)
+
+		if (Input.IsActionPressed("ui_right"))
 		{
-			velocity.X = direction.X * Speed;
+			velocity.X = Speed;
 		}
+		else if (Input.IsActionPressed("ui_left"))
+		{
+			velocity.X = -Speed;
+		} 
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+			velocity.X = 0;	
 		}
 		
 		if (velocity.X != 0 && velocity.Y >= 0)
