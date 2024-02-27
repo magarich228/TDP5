@@ -56,25 +56,33 @@ public partial class stickplayer : CharacterBody2D
 		if (!IsOnFloor())
 			velocity.Y += Gravity * (float)delta;
 
-		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
+		if (Input.IsActionJustPressed("ui_up"))
 		{
 			if (State == PlayerState.Lie || State == PlayerState.Creep)
 			{
 				State = PlayerState.Stand;
 			}
-			else
+			else if (IsOnFloor())
 			{
 				velocity.Y = JumpVelocity;
 			}
 		}
 
+		var speed = State switch
+		{
+			PlayerState.Run or PlayerState.Stand or PlayerState.Jump => Speed,
+			PlayerState.SitWalk or PlayerState.Sit => Speed / 1.5f,
+			PlayerState.Creep or PlayerState.Lie => Speed / 2f,
+			_ => 0
+		};
+		
 		if (Input.IsActionPressed("ui_right"))
 		{
-			velocity.X = Speed;
+			velocity.X = speed;
 		}
 		else if (Input.IsActionPressed("ui_left"))
 		{
-			velocity.X = -Speed;
+			velocity.X = -speed;
 		} 
 		else
 		{
