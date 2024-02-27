@@ -7,18 +7,22 @@ using Tdp5.player;
 
 public partial class stickplayer : CharacterBody2D
 {
-	public const float Speed = 300.0f;
+	// Godot public properties.
+	// ReSharper disable MemberCanBePrivate.Global
 	public const float JumpVelocity = -500.0f;
+	public const float Speed = 300.0f;
 
 	public PlayerState State { get; set; }
 	public float Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+	// ReSharper restore MemberCanBePrivate.Global
 	
 	private AnimationPlayer _animationPlayer;
 	private Dictionary<PlayerState, string> _stateAnimations;
-	private Stopwatch _watch = new Stopwatch();
+	private Stopwatch _watch;
 
 	public override void _Ready()
 	{
+		_watch = new Stopwatch();
 		_animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer ??
 						   throw new ApplicationException($"Не получен узел {nameof(AnimationPlayer)}");
 
@@ -28,15 +32,7 @@ public partial class stickplayer : CharacterBody2D
 		
 		foreach (var state in Enum.GetValues<PlayerState>())
 		{
-			var stateName = Enum.GetName(state) ??
-								throw new ApplicationException("Не получено имя анимации состояния.");
-			
-			var animationName = _animationPlayer.GetAnimation(Regex.Replace(
-						stateName,
-						"[A-Z]",
-						"_$0")
-					.Substring(1)
-					.ToLower()).ResourceName;
+			var animationName = GetAnimationName(state);
 
 			if (!string.IsNullOrWhiteSpace(animationName))
 			{
@@ -54,52 +50,84 @@ public partial class stickplayer : CharacterBody2D
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
-			Console.WriteLine("stand");
-			State = PlayerState.Stand;
-		} else { Console.WriteLine($"not stand ({State})"); }
+			State = State != PlayerState.Lie && State != PlayerState.Creep? PlayerState.Stand : PlayerState.Lie;
+		}
 		
 		if (!IsOnFloor())
 			velocity.Y += Gravity * (float)delta;
 
-		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
+		if (Input.IsActionJustPressed("ui_up"))
 		{
-			velocity.Y = JumpVelocity;
+			if (State == PlayerState.Lie || State == PlayerState.Creep)
+			{
+				State = PlayerState.Stand;
+			}
+			else if (IsOnFloor())
+			{
+				velocity.Y = JumpVelocity;
+			}
 		}
 
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		
-		if (direction != Vector2.Zero)
+		var speed = State switch
 		{
-			velocity.X = direction.X * Speed;
+			PlayerState.Run or PlayerState.Stand or PlayerState.Jump => Speed,
+			PlayerState.SitWalk or PlayerState.Sit => Speed / 1.5f,
+			PlayerState.Creep or PlayerState.Lie => Speed / 2f,
+			_ => 0
+		};
+		
+		if (Input.IsActionPressed("ui_right"))
+		{
+			velocity.X = speed;
 		}
+		else if (Input.IsActionPressed("ui_left"))
+		{
+			velocity.X = -speed;
+		} 
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+			velocity.X = 0;	
 		}
 		
-		if (velocity.X != 0 && velocity.Y == 0)
+		if (velocity.X != 0 && velocity.Y >= 0)
 		{
-			State = PlayerState.Run;
+			State = State == PlayerState.Lie || State == PlayerState.Creep ? PlayerState.Creep : PlayerState.Run;
 		}
 		
-		if (velocity.Y != 0 && !Input.IsActionPressed("ui_down"))
+		if (State != PlayerState.Lie && State != PlayerState.Creep && !IsOnFloor() && !Input.IsActionPressed("ui_down"))
 		{
 			State = PlayerState.Jump;
 		}
+		
+		if (Input.IsActionJustPressed("ui_down"))
+		{
+			if (_watch.IsRunning)
+			{
+				if (_watch.ElapsedMilliseconds > 500)
+				{
+					_watch.Reset();
+					_watch.Stop();
+				}
+				else
+				{
+					State = PlayerState.Lie;
+				}
+			}
+			
+			_watch.Start();
+		}
 
-		if (Input.IsActionPressed("ui_down"))
+		if (State != PlayerState.Lie && Input.IsActionPressed("ui_down"))
 		{
 			State = PlayerState.Sit;
 		}
 
-		if (velocity.X != 0 && Input.IsActionPressed("ui_down") &&
+		if (State != PlayerState.Lie && velocity.X != 0 && Input.IsActionPressed("ui_down") &&
 			(Input.IsActionPressed("ui_left") || Input.IsActionPressed("ui_right")))
 		{
 			State = PlayerState.SitWalk;
 		}
-
+		
 		var localMousePosition = GetLocalMousePosition();
 		var globalMousePosition = GetGlobalMousePosition();
 
@@ -124,10 +152,16 @@ public partial class stickplayer : CharacterBody2D
 		MoveAndSlide();
 		
 		if (State == PlayerState.Sit && oldState == PlayerState.SitWalk)
-			_animationPlayer.Play("sit", fromEnd: true);
+			_animationPlayer.Play(GetAnimationName(State), fromEnd: true);
+		
+		if (State == PlayerState.Lie && oldState == PlayerState.Creep)
+			_animationPlayer.Play(GetAnimationName(State), fromEnd: true);
 		
 		if (State != oldState)
+		{
 			Animate();
+			Console.WriteLine($"State: {State}");
+		}
 	}
 
 	private void Animate()
@@ -136,5 +170,18 @@ public partial class stickplayer : CharacterBody2D
 		{
 			_animationPlayer.Play(_stateAnimations[State]);
 		}
+	}
+
+	private string GetAnimationName(PlayerState state)
+	{
+		var stateName = Enum.GetName(state) ??
+						throw new ApplicationException("Не получено имя анимации состояния.");
+		
+		return _animationPlayer.GetAnimation(Regex.Replace(
+				stateName,
+				"[A-Z]",
+				"_$0")
+			.Substring(1)
+			.ToLower()).ResourceName;
 	}
 }
