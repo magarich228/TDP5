@@ -7,11 +7,14 @@ using Tdp5.player;
 
 public partial class stickplayer : CharacterBody2D
 {
-	public const float Speed = 300.0f;
+	// Godot public properties.
+	// ReSharper disable MemberCanBePrivate.Global
 	public const float JumpVelocity = -500.0f;
+	public const float Speed = 300.0f;
 
 	public PlayerState State { get; set; }
 	public float Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+	// ReSharper restore MemberCanBePrivate.Global
 	
 	private AnimationPlayer _animationPlayer;
 	private Dictionary<PlayerState, string> _stateAnimations;
