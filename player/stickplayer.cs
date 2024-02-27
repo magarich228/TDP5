@@ -29,15 +29,7 @@ public partial class stickplayer : CharacterBody2D
 		
 		foreach (var state in Enum.GetValues<PlayerState>())
 		{
-			var stateName = Enum.GetName(state) ??
-								throw new ApplicationException("Не получено имя анимации состояния.");
-			
-			var animationName = _animationPlayer.GetAnimation(Regex.Replace(
-						stateName,
-						"[A-Z]",
-						"_$0")
-					.Substring(1)
-					.ToLower()).ResourceName;
+			var animationName = GetAnimationName(state);
 
 			if (!string.IsNullOrWhiteSpace(animationName))
 			{
@@ -55,7 +47,7 @@ public partial class stickplayer : CharacterBody2D
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
-			State = State != PlayerState.Lie ? PlayerState.Stand : PlayerState.Lie;
+			State = State != PlayerState.Lie && State != PlayerState.Creep? PlayerState.Stand : PlayerState.Lie;
 		}
 		
 		if (!IsOnFloor())
@@ -63,7 +55,14 @@ public partial class stickplayer : CharacterBody2D
 
 		if (Input.IsActionJustPressed("ui_up") && IsOnFloor())
 		{
-			velocity.Y = JumpVelocity;
+			if (State == PlayerState.Lie)
+			{
+				State = PlayerState.Stand;
+			}
+			else
+			{
+				velocity.Y = JumpVelocity;
+			}
 		}
 
 		// Get the input direction and handle the movement/deceleration.
@@ -79,34 +78,46 @@ public partial class stickplayer : CharacterBody2D
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 		}
 		
-		if (velocity.X != 0 && velocity.Y == 0)
+		if (velocity.X != 0 && velocity.Y >= 0)
 		{
-			State = PlayerState.Run;
+			State = State == PlayerState.Lie || State == PlayerState.Creep ? PlayerState.Creep : PlayerState.Run;
 		}
-		
-		if (velocity.Y != 0 && !Input.IsActionPressed("ui_down"))
+
+		Console.WriteLine($"{velocity.Y}");
+		if (State != PlayerState.Lie && State != PlayerState.Creep && !IsOnFloor() && !Input.IsActionPressed("ui_down"))
 		{
 			State = PlayerState.Jump;
 		}
-
-		if (Input.IsActionPressed("ui_down"))
+		
+		if (Input.IsActionJustPressed("ui_down"))
 		{
-			if (_watch.IsRunning && _watch.ElapsedMilliseconds > 500)
+			if (_watch.IsRunning)
 			{
-				_watch.Restart();
+				if (_watch.ElapsedMilliseconds > 500)
+				{
+					_watch.Reset();
+					_watch.Stop();
+				}
+				else
+				{
+					State = PlayerState.Lie;
+				}
 			}
-			
-			State = _watch.ElapsedMilliseconds > 500 ? PlayerState.Sit : PlayerState.Lie;
 			
 			_watch.Start();
 		}
 
-		if (velocity.X != 0 && Input.IsActionPressed("ui_down") &&
+		if (State != PlayerState.Lie && Input.IsActionPressed("ui_down"))
+		{
+			State = PlayerState.Sit;
+		}
+
+		if (State != PlayerState.Lie && velocity.X != 0 && Input.IsActionPressed("ui_down") &&
 			(Input.IsActionPressed("ui_left") || Input.IsActionPressed("ui_right")))
 		{
 			State = PlayerState.SitWalk;
 		}
-
+		
 		var localMousePosition = GetLocalMousePosition();
 		var globalMousePosition = GetGlobalMousePosition();
 
@@ -131,10 +142,16 @@ public partial class stickplayer : CharacterBody2D
 		MoveAndSlide();
 		
 		if (State == PlayerState.Sit && oldState == PlayerState.SitWalk)
-			_animationPlayer.Play("sit", fromEnd: true);
+			_animationPlayer.Play(GetAnimationName(State), fromEnd: true);
+		
+		if (State == PlayerState.Lie && oldState == PlayerState.Creep)
+			_animationPlayer.Play(GetAnimationName(State), fromEnd: true);
 		
 		if (State != oldState)
+		{
 			Animate();
+			Console.WriteLine($"{State}");
+		}
 	}
 
 	private void Animate()
@@ -143,5 +160,18 @@ public partial class stickplayer : CharacterBody2D
 		{
 			_animationPlayer.Play(_stateAnimations[State]);
 		}
+	}
+
+	private string GetAnimationName(PlayerState state)
+	{
+		var stateName = Enum.GetName(state) ??
+						throw new ApplicationException("Не получено имя анимации состояния.");
+		
+		return _animationPlayer.GetAnimation(Regex.Replace(
+				stateName,
+				"[A-Z]",
+				"_$0")
+			.Substring(1)
+			.ToLower()).ResourceName;
 	}
 }
