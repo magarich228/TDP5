@@ -117,14 +117,16 @@ public partial class stickplayer : CharacterBody2D
 			_watch.Start();
 		}
 
-		if (State != PlayerState.Lie && Input.IsActionPressed("ui_down"))
+		if (State != PlayerState.Lie && State != PlayerState.Creep && Input.IsActionPressed("ui_down"))
 		{
+			Console.WriteLine("State при Sit:" + State);
 			State = PlayerState.Sit;
 		}
 
-		if (State != PlayerState.Lie && velocity.X != 0 && Input.IsActionPressed("ui_down") &&
+		if (State != PlayerState.Lie && State != PlayerState.Creep && velocity.X != 0 && Input.IsActionPressed("ui_down") &&
 			(Input.IsActionPressed("ui_left") || Input.IsActionPressed("ui_right")))
 		{
+			Console.WriteLine("State при SitWalk: " + State);
 			State = PlayerState.SitWalk;
 		}
 		
