@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Godot.Collections;
 using Tdp5.player;
 
-public partial class stickplayer : CharacterBody2D
+public partial class StickPlayer : CharacterBody2D
 {
 	// Godot public properties.
 	// ReSharper disable MemberCanBePrivate.Global
