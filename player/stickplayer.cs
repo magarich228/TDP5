@@ -117,6 +117,7 @@ public partial class stickplayer : CharacterBody2D
 			_watch.Start();
 		}
 
+		// TODO: Вынести action'ы в конфигурацию
 		if (State != PlayerState.Lie && State != PlayerState.Creep && Input.IsActionPressed("ui_down"))
 		{
 			Console.WriteLine("State при Sit:" + State);
