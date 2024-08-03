@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dtbdvkbvex0j3"]
 
 [ext_resource type="PackedScene" uid="uid://dncbfkx3vm1xp" path="res://maps/testmap.tscn" id="1_mdbgx"]
-[ext_resource type="PackedScene" uid="uid://bcavm6ggf6ur3" path="res://player/stickplayer.tscn" id="2_t4ahk"]
+[ext_resource type="PackedScene" uid="uid://bcavm6ggf6ur3" path="res://player/StickPlayer.tscn" id="2_t4ahk"]
 
 [node name="game" type="Node2D"]
 position = Vector2(574, 329)
