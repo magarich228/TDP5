@@ -10,13 +10,12 @@ public partial class Ak47Gun : Node
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
-	{
+	{ 
 	}
 	
 	public void Shoot()
 	{
-		// var bullet = (Bullet)ResourceLoader.Load<PackedScene>("res://player/bullet.tscn").Instantiate();
-		// bullet.Position = Position;
-		// GetTree().Root.AddChild(bullet);
+		var bullet = (Bullet)ResourceLoader.Load<PackedScene>("res://player/bullet.tscn").Instantiate();
+		GetTree().Root.AddChild(bullet);
 	}
 }
