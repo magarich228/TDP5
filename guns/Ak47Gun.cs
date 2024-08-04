@@ -28,6 +28,7 @@ public partial class Ak47Gun : GunBase
 			GlobalPosition.X,
 			GlobalPosition.Y);
 		bullet.GlobalRotation = GlobalRotation;
+		bullet.Rotate(Mathf.DegToRad(90f));
 		
 		GetTree().Root.AddChild(bullet);
 	}

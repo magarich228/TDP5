@@ -15,7 +15,7 @@ public partial class Bullet : Node2D
 	public override void _Process(double delta)
 	{
 		Position += new Vector2((float)Speed * (float)delta, 0)
-			.Rotated(GlobalRotation);
+			.Rotated(GlobalRotation + Mathf.DegToRad(-90f));
 		
 		// TODO: Проверить, что выходит за границы экрана.
 		if (Position.X > GetViewportRect().Size.X)
