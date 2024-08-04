@@ -1715,6 +1715,9 @@ position = Vector2(26.6667, -3.33333)
 rotation = -1.5796
 texture = ExtResource("4_gjw86")
 
+[node name="hand" type="Node2D" parent="Skeleton2D/torse/rightarmup/rightarm/Sprite2D"]
+position = Vector2(-0.264106, 29.9988)
+
 [node name="leftarmup" type="Bone2D" parent="Skeleton2D/torse"]
 position = Vector2(1.33333, -110)
 rest = Transform2D(1, 0, 0, 1, -2, -113.333)
@@ -1741,6 +1744,9 @@ editor_settings/show_bone_gizmo = false
 position = Vector2(26.3953, 3.79489)
 rotation = -1.44867
 texture = ExtResource("4_gjw86")
+
+[node name="hand" type="Node2D" parent="Skeleton2D/torse/leftarmup/leftarm/Sprite2D"]
+position = Vector2(-0.61995, 29.9936)
 
 [node name="RTlau" type="RemoteTransform2D" parent="Skeleton2D/torse"]
 position = Vector2(1.33333, -110)
