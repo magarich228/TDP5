@@ -3,8 +3,11 @@ using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Godot.Collections;
+using Tdp5.guns;
 using Tdp5.player;
 
+// TODO: пофиксить namespaces.
+// TODO: вынести часть логики в _Input
 public partial class StickPlayer : CharacterBody2D
 {
 	// Godot public properties.
@@ -12,10 +15,12 @@ public partial class StickPlayer : CharacterBody2D
 	public const float JumpVelocity = -500.0f;
 	public const float Speed = 300.0f;
 
-	public PlayerState State { get; set; }
+	public PlayerState State { get; private set; }
 	public float Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+
+	public GunBase Gun { get; private set; }
 	// ReSharper restore MemberCanBePrivate.Global
-	
+
 	private AnimationPlayer _animationPlayer;
 	private Dictionary<PlayerState, string> _stateAnimations;
 	private Stopwatch _watch;
@@ -29,7 +34,7 @@ public partial class StickPlayer : CharacterBody2D
 		_animationPlayer.Play("stand");
 
 		_stateAnimations = new Dictionary<PlayerState, string>();
-		
+
 		foreach (var state in Enum.GetValues<PlayerState>())
 		{
 			var animationName = GetAnimationName(state);
@@ -39,10 +44,12 @@ public partial class StickPlayer : CharacterBody2D
 				_stateAnimations.Add(state, animationName);
 			}
 		}
-		
+
+		SetGun(new Ak47Gun());
+
 		base._Ready();
 	}
-	
+
 	public override void _PhysicsProcess(double delta)
 	{
 		var oldState = State;
@@ -50,11 +57,11 @@ public partial class StickPlayer : CharacterBody2D
 
 		if (IsOnFloor() && velocity.X.Equals(0) && !Input.IsActionPressed("ui_down"))
 		{
-			State = State != PlayerState.Lie && State != PlayerState.Creep? PlayerState.Stand : PlayerState.Lie;
+			State = State != PlayerState.Lie && State != PlayerState.Creep ? PlayerState.Stand : PlayerState.Lie;
 		}
-		
+
 		if (!IsOnFloor())
-			velocity.Y += Gravity * (float)delta;
+			velocity.Y += Gravity * (float) delta;
 
 		if (Input.IsActionJustPressed("ui_up"))
 		{
@@ -75,7 +82,7 @@ public partial class StickPlayer : CharacterBody2D
 			PlayerState.Creep or PlayerState.Lie => Speed / 2f,
 			_ => 0
 		};
-		
+
 		if (Input.IsActionPressed("ui_right"))
 		{
 			velocity.X = speed;
@@ -83,22 +90,22 @@ public partial class StickPlayer : CharacterBody2D
 		else if (Input.IsActionPressed("ui_left"))
 		{
 			velocity.X = -speed;
-		} 
+		}
 		else
 		{
-			velocity.X = 0;	
+			velocity.X = 0;
 		}
-		
+
 		if (velocity.X != 0 && velocity.Y >= 0)
 		{
 			State = State == PlayerState.Lie || State == PlayerState.Creep ? PlayerState.Creep : PlayerState.Run;
 		}
-		
+
 		if (State != PlayerState.Lie && State != PlayerState.Creep && !IsOnFloor() && !Input.IsActionPressed("ui_down"))
 		{
 			State = PlayerState.Jump;
 		}
-		
+
 		if (Input.IsActionJustPressed("ui_down"))
 		{
 			if (_watch.IsRunning)
@@ -113,7 +120,7 @@ public partial class StickPlayer : CharacterBody2D
 					State = PlayerState.Lie;
 				}
 			}
-			
+
 			_watch.Start();
 		}
 
@@ -124,13 +131,14 @@ public partial class StickPlayer : CharacterBody2D
 			State = PlayerState.Sit;
 		}
 
-		if (State != PlayerState.Lie && State != PlayerState.Creep && velocity.X != 0 && Input.IsActionPressed("ui_down") &&
+		if (State != PlayerState.Lie && State != PlayerState.Creep && velocity.X != 0 &&
+			Input.IsActionPressed("ui_down") &&
 			(Input.IsActionPressed("ui_left") || Input.IsActionPressed("ui_right")))
 		{
 			Console.WriteLine("State при SitWalk: " + State);
 			State = PlayerState.SitWalk;
 		}
-		
+
 		var localMousePosition = GetLocalMousePosition();
 		var globalMousePosition = GetGlobalMousePosition();
 
@@ -149,17 +157,17 @@ public partial class StickPlayer : CharacterBody2D
 		var rtRau = GetNode<RemoteTransform2D>(new NodePath("Skeleton2D/torse/RTrau"));
 		rtLau.LookAt(globalMousePosition);
 		rtRau.LookAt(globalMousePosition);
-		
+
 		Velocity = velocity;
-		
+
 		MoveAndSlide();
-		
+
 		if (State == PlayerState.Sit && oldState == PlayerState.SitWalk)
 			_animationPlayer.Play(GetAnimationName(State), fromEnd: true);
-		
+
 		if (State == PlayerState.Lie && oldState == PlayerState.Creep)
 			_animationPlayer.Play(GetAnimationName(State), fromEnd: true);
-		
+
 		if (State != oldState)
 		{
 			Animate();
@@ -179,12 +187,27 @@ public partial class StickPlayer : CharacterBody2D
 	{
 		var stateName = Enum.GetName(state) ??
 						throw new ApplicationException("Не получено имя анимации состояния.");
-		
+
 		return _animationPlayer.GetAnimation(Regex.Replace(
 				stateName,
 				"[A-Z]",
 				"_$0")
 			.Substring(1)
 			.ToLower()).ResourceName;
+	}
+
+	private void SetGun(GunBase gun)
+	{
+		var gunScene = (GunBase) gun.GunScene.Instantiate();
+		
+		gunScene.Rotation = Mathf.DegToRad(90f);
+		gunScene.ZIndex = 1;
+
+		Gun = gunScene;
+
+		var rightArmPath = new NodePath("Skeleton2D/torse/rightarmup/rightarm/Sprite2D/hand");
+
+		GetNode<Node2D>(rightArmPath)
+			.AddChild(gunScene);
 	}
 }
