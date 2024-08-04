@@ -8,13 +8,14 @@ radius = 2.0
 height = 32.0
 
 [node name="Bullet" type="Node2D"]
+scale = Vector2(0.541096, 0.541096)
 script = ExtResource("1_6nxlb")
 
 [node name="bulletSprite" type="Sprite2D" parent="."]
 scale = Vector2(0.00990099, 0.00990099)
 texture = ExtResource("2_np7oq")
 
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="Area2D" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CapsuleShape2D_al8o4")
