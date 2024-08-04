@@ -200,6 +200,7 @@ public partial class StickPlayer : CharacterBody2D
 	{
 		var gunScene = (GunBase) gun.GunScene.Instantiate();
 		
+		// TODO: пофиксить поворот
 		gunScene.Rotation = Mathf.DegToRad(90f);
 		gunScene.ZIndex = 1;
 
