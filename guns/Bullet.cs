@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-public partial class Bullet : Node2D
+public partial class Bullet : RigidBody2D
 {
 	// Godot public properties.
 	// ReSharper disable MemberCanBePrivate.Global
@@ -11,11 +10,13 @@ public partial class Bullet : Node2D
 	public override void _Ready()
 	{
 	}
-	
-	public override void _Process(double delta)
+
+	public override void _PhysicsProcess(double delta)
 	{
-		Position += new Vector2((float)Speed * (float)delta, 0)
+		LinearVelocity += new Vector2((float)Speed * (float)delta, 0)
 			.Rotated(GlobalRotation + Mathf.DegToRad(-90f));
+		
+		MoveAndCollide(LinearVelocity);
 		
 		if (Position.X > GetViewportRect().Size.X)
 		{
@@ -26,5 +27,12 @@ public partial class Bullet : Node2D
 		{
 			QueueFree();
 		}
+		
+		base._PhysicsProcess(delta);
+	}
+
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
 	}
 }
