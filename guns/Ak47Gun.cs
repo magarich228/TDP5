@@ -21,7 +21,7 @@ public partial class Ak47Gun : GunBase
 	public override void Shoot()
 	{
 		// TODO: фикс поворота пули.
-		var bullet = (RigidBody2D)ResourceLoader.Load<PackedScene>("res://guns/bullet.tscn").Instantiate();
+		var bullet = (Bullet)ResourceLoader.Load<PackedScene>("res://guns/bullet.tscn").Instantiate();
 		
 		bullet.ZIndex = 1;
 		bullet.Position = new Vector2(

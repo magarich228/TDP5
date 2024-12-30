@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://221emkilcxhc"]
+[gd_scene load_steps=4 format=3 uid="uid://221emkilcxhc"]
 
+[ext_resource type="Script" path="res://guns/Bullet.cs" id="1_cpxgm"]
 [ext_resource type="Texture2D" uid="uid://q4xgn0tf1b1x" path="res://assets/guns/ak47bullet.png" id="2_np7oq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_al8o4"]
@@ -7,6 +8,8 @@ radius = 2.0
 height = 32.0
 
 [node name="RigidBody2D" type="RigidBody2D"]
+mass = 0.01
+script = ExtResource("1_cpxgm")
 
 [node name="bulletSprite" type="Sprite2D" parent="."]
 scale = Vector2(0.00990099, 0.00990099)
