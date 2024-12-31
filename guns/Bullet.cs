@@ -27,4 +27,14 @@ public partial class Bullet : Node2D
 			QueueFree();
 		}
 	}
+	
+	private void _OnBodyEntered(Node2D body)
+	{
+		if (body is StaticBody2D)
+		{
+			QueueFree();
+		}
+		
+		Console.WriteLine(body.GetType());
+	}
 }
