@@ -1,7 +1,7 @@
-using Godot;
 using System;
+using Godot;
 
-public partial class Bullet : Node2D
+public partial class Bullet : RigidBody2D
 {
 	// Godot public properties.
 	// ReSharper disable MemberCanBePrivate.Global
@@ -10,12 +10,14 @@ public partial class Bullet : Node2D
 	
 	public override void _Ready()
 	{
+		ContactMonitor = true;
+		MaxContactsReported = 10;
 	}
-	
-	public override void _Process(double delta)
+
+	public override void _PhysicsProcess(double delta)
 	{
-		Position += new Vector2((float)Speed * (float)delta, 0)
-			.Rotated(GlobalRotation + Mathf.DegToRad(-90f));
+		MoveAndCollide(new Vector2((float)Speed * (float)delta, 0)
+			.Rotated(GlobalRotation + Mathf.DegToRad(-90f)));
 		
 		if (Position.X > GetViewportRect().Size.X)
 		{
@@ -26,5 +28,31 @@ public partial class Bullet : Node2D
 		{
 			QueueFree();
 		}
+
+		var collisions = GetCollidingBodies();
+
+		if (collisions.Count > 0)
+		{
+			QueueFree();
+		}
+		
+		Console.WriteLine(collisions.Count);
+		
+		base._PhysicsProcess(delta);
+	}
+	
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
+	}
+	
+	private void _OnBodyEntered(Node2D body)
+	{
+		if (body is StaticBody2D)
+		{
+			QueueFree();
+		}
+		
+		Console.WriteLine(body.GetType());
 	}
 }
