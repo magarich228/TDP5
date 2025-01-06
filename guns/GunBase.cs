@@ -4,8 +4,8 @@ namespace Tdp5.guns;
 
 public abstract partial class GunBase : Node2D
 {
-	public abstract PackedScene GunScene { get; protected set; }
-	protected abstract PackedScene BulletScene { get; set; }
+	public abstract PackedScene GunScene { get; }
+	protected abstract PackedScene BulletScene { get; }
 
 	public override void _Input(InputEvent @event)
 	{
@@ -20,7 +20,7 @@ public abstract partial class GunBase : Node2D
 		base._Input(@event);
 	}
 
-	private void Shoot()
+	protected virtual void Shoot()
 	{
 		var bullet = BulletScene.Instantiate<Bullet>();
 		
