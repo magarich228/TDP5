@@ -13,15 +13,15 @@ public partial class Bullet : Node2D
 		Position += new Vector2((float)Speed * (float)delta, 0)
 			.Rotated(GlobalRotation + Mathf.DegToRad(-90f));
 		
-		if (Position.X > GetViewportRect().Size.X)
-		{
-			QueueFree();
-		}
-		
-		if (Position.X < 0)
-		{
-			QueueFree();
-		}
+		//if (Position.X > GetViewportRect().Size.X)
+		//{
+			//QueueFree();
+		//}
+		//
+		//if (Position.X < 0)
+		//{
+			//QueueFree();
+		//}
 		
 		base._PhysicsProcess(delta);
 	}

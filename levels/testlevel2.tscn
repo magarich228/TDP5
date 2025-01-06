@@ -1,3 +1,11 @@
-[gd_scene format=3 uid="uid://bemua34sh662x"]
+[gd_scene load_steps=3 format=3 uid="uid://bemua34sh662x"]
+
+[ext_resource type="PackedScene" uid="uid://bcavm6ggf6ur3" path="res://player/stickplayer.tscn" id="1_gmfu8"]
+[ext_resource type="PackedScene" uid="uid://eog1210lv8nq" path="res://maps/testmap2.tscn" id="2_k1ecl"]
 
 [node name="Testlevel2" type="Node2D"]
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_gmfu8")]
+top_level = true
+
+[node name="Testmap2" parent="." instance=ExtResource("2_k1ecl")]
