@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://eog1210lv8nq"]
+
+[ext_resource type="Texture2D" uid="uid://ctvwvspmqe28l" path="res://assets/map-tiles/boat_pack/wm_enlarge_help (1).png" id="1_0xker"]
+
+[node name="Testmap2" type="Node2D"]
+
+[node name="WmEnlargeHelp(1)" type="Sprite2D" parent="."]
+position = Vector2(-7, -10)
+scale = Vector2(0.835661, 0.835661)
+texture = ExtResource("1_0xker")

@@ -1767,3 +1767,5 @@ libraries = {
 "": SubResource("AnimationLibrary_houuf")
 }
 next/RESET = &"sit"
+
+[node name="Camera2D" type="Camera2D" parent="."]
