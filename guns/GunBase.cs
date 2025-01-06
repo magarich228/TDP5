@@ -4,11 +4,12 @@ namespace Tdp5.guns;
 
 public abstract partial class GunBase : Node2D
 {
-	public abstract PackedScene GunScene { get; }
+	public abstract PackedScene GunScene { get; protected set; }
+	protected abstract PackedScene BulletScene { get; set; }
 
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton mouseButtonEvent && mouseButtonEvent.ButtonIndex == MouseButton.Left)
+		if (@event is InputEventMouseButton {ButtonIndex: MouseButton.Left} mouseButtonEvent)
 		{
 			if (mouseButtonEvent.IsPressed())
 			{
@@ -18,5 +19,18 @@ public abstract partial class GunBase : Node2D
 
 		base._Input(@event);
 	}
-	public abstract void Shoot();
+
+	private void Shoot()
+	{
+		var bullet = BulletScene.Instantiate<Bullet>();
+		
+		bullet.ZIndex = 1;
+		bullet.Position = new Vector2(
+			GlobalPosition.X,
+			GlobalPosition.Y);
+		bullet.GlobalRotation = GlobalRotation;
+		bullet.Rotate(Mathf.DegToRad(90f));
+		
+		GetTree().Root.AddChild(bullet);
+	}
 }
