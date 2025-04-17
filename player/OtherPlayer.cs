@@ -8,7 +8,7 @@ using Tdp5.player;
 
 // TODO: пофиксить namespaces.
 // TODO: вынести часть логики в _Input
-public partial class StickPlayer : CharacterBody2D
+public partial class OtherPlayer : CharacterBody2D
 {
 	// Godot public properties.
 	// ReSharper disable MemberCanBePrivate.Global
